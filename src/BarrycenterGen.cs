@@ -1,0 +1,7 @@
+namespace BarrycenterGen
+{
+    class BarrycenterGen
+    {
+        
+    }
+}
