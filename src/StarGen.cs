@@ -199,10 +199,10 @@ namespace StarGen
                     string massRadiusData = starStatModifiersData[row,starMassRadiusIndex];
 
                     values = massRadiusData.Split("/");
-                    parsedStarStatData[1] = Convert.ToSingle(starStatModifiersData[row, starMassRadiusIndex]);
-                    parsedStarStatData[0] = calculateDwarfLuminosity();
+                    parsedStarStatData[1] = Convert.ToSingle(values[0]);
+                    parsedStarStatData[0] = Convert.ToSingle(values[1]);
                     parsedStarStatData[2] = Convert.ToSingle(1.0f);
-                    parsedStarStatData[3] = Convert.ToSingle(starStatModifiersData[row, starMassRadiusIndex]);
+                    parsedStarStatData[3] = Convert.ToSingle(calculateGiantRadius());
                     break;
                 case 7:
                     row = 2;
