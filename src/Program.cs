@@ -8,7 +8,8 @@ namespace Program
     {
         static void Main(string[] args)
         {
-            
+            Star star = new Star(isBinary: false);
+            star.generateStar();
         }
     }
 }
