@@ -147,11 +147,27 @@ namespace StarGen
 
             // Apply Star Stat modifiers
             float[] starData = getStarNumberData();
-            float[] starModifiers = getStarStatModifierData();
-            luminosity = starData[0] * starModifiers[0];
-            mass = starData[1] * starModifiers[1];
-            surfaceTemperature = starData[2] * starModifiers[2];
-            radius = starData[3] * starModifiers[3];
+            if (BasicStarType == BasicType.BrownDwarf || BasicStarType == BasicType.WhiteDwarf)
+            {
+                mass = starData[1];
+                surfaceTemperature = starData[2];
+                radius = starData[3];
+                luminosity = calculateDwarfLuminosity();
+            } else if (SizeCode == 3 || SizeCode == 4)
+            {
+                float[] starModifiers = getStarStatModifierData();
+                luminosity = starData[0] * starModifiers[0];
+                mass = starData[1] * starModifiers[1];
+                surfaceTemperature = starData[2] * starModifiers[2];
+                radius = calculateGiantRadius();
+            }
+            else
+            {
+                luminosity = starData[0];
+                mass = starData[1];
+                surfaceTemperature = starData[2];
+                radius = starData[3];
+            }
         }
 
         private float calculateDwarfLuminosity()
@@ -204,49 +220,6 @@ namespace StarGen
                     parsedStarStatData[2] = Convert.ToSingle(1.0f);
                     parsedStarStatData[3] = Convert.ToSingle(calculateGiantRadius());
                     break;
-                case 7:
-                    row = 2;
-
-                    starMassRadiusIndex = dice.getRandomRoll(1, 10);
-                    int starTemperatureIndex = dice.getRandomRoll(1, 10);
-
-                    massRadiusData = starStatModifiersData[row,starMassRadiusIndex];
-                    string temperatureData = starStatModifiersData[row,starTemperatureIndex];
-                    
-                    values = massRadiusData.Split("/");
-                    parsedStarStatData[0] = calculateDwarfLuminosity();
-                    parsedStarStatData[1] = Convert.ToSingle(values[0]);
-                    parsedStarStatData[3] = Convert.ToSingle(values[3]);
-
-                    values = temperatureData.Split("/");
-                    parsedStarStatData[2] = Convert.ToSingle(values[2]);
-                    break;
-                case 5:
-                    parsedStarStatData[0] = 1.0f;
-                    parsedStarStatData[1] = 1.0f;
-                    parsedStarStatData[2] = 1.0f;
-                    parsedStarStatData[3] = 1.0f;
-                    break;
-            }
-            if (BasicStarType == BasicType.BrownDwarf)
-            {
-                row = 3;
-
-                int starMassRadiusIndex = dice.getRandomRoll(1, 10);
-                int starTemperatureIndex = dice.getRandomRoll(1, 10);
-
-                string massRadiusData = starStatModifiersData[row,starMassRadiusIndex];
-                string temperatureData = starStatModifiersData[row,starTemperatureIndex];
-                
-
-                string[] values = massRadiusData.Split("/");
-                parsedStarStatData[0] = calculateDwarfLuminosity();
-                parsedStarStatData[1] = Convert.ToSingle(values[0]);
-                parsedStarStatData[3] = Convert.ToSingle(values[3]);
-
-                values = temperatureData.Split("/");
-                parsedStarStatData[2] = Convert.ToSingle(values[2]);
-
             }
             return parsedStarStatData;
         }
@@ -335,16 +308,28 @@ namespace StarGen
                             throw new ArgumentException("Type is M but sizecode is not 5 or 3.");
                     }
                     break;
-                
+                case BasicType.BrownDwarf:
+                    row = 15;
+                    break;
+                case BasicType.WhiteDwarf:
+                    row = 16;
+                    break;
             }
-
             Loader starNumberTypes = new Loader();
             string[,] starNumberTypeData = starNumberTypes.loadStarNumberTypes();
             string starDataPoint = starNumberTypeData[row,SpectralClass];
             
             string[] values = starDataPoint.Split("/");
+
             float[] starDataParsed = new float[4];
-            starDataParsed[0] = Convert.ToSingle(values[0]);
+            if (values[0] == "")
+            {
+                starDataParsed[0] = 0.0f;
+            }
+            else
+            {
+                starDataParsed[0] = Convert.ToSingle(values[0]); 
+            }
             starDataParsed[1] = Convert.ToSingle(values[1]);
             starDataParsed[2] = Convert.ToSingle(values[2]);
             starDataParsed[3] = Convert.ToSingle(values[3]);

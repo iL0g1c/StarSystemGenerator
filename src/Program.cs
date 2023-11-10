@@ -8,7 +8,7 @@ namespace Program
     {
         static void Main(string[] args)
         {
-            for (int i = 0; i < 20; i++)
+            for (int i = 0; i < 50; i++)
             {
                 Star star = new Star(isBinary: false);
                 star.generateStar();
