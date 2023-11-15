@@ -1,9 +1,10 @@
 ﻿using System.ComponentModel;
 using System.Diagnostics;
-using BarrycenterGen;
-using StarGen;
-using RandomRoll;
 using System.Collections;
+
+using DataTools;
+using StarGen;
+using SystemGen;
 
 namespace Program
 {
@@ -11,15 +12,16 @@ namespace Program
     {
         static void Main(string[] args)
         {
-            RandomRoll.GetRandomRoll dice = new RandomRoll.GetRandomRoll();
+            List<_System> systems = new List<_System>();
             for (int i = 0; i < 50; i++)
             {
-            Barrycenter newBarrycenter = new Barrycenter();
-            Debug.WriteLine($"Star System {i+1}\n");
-            newBarrycenter.generateBarrycenter(new List<Star>());
-            //Debug.WriteLine(dice.getRandomRoll(1,10));
-
+                Debug.WriteLine("Star System " + i);
+                _System system = new _System();
+                systems.Add(system);
             }
+            Debug.WriteLine(systems[0].barrycenter.starNodeB.SizeCode);
+            Loader loader = new Loader();
+            loader.saveSystemJson(systems);
         }
     }
 }

@@ -5,10 +5,13 @@ namespace BarrycenterGen
 {
     class Barrycenter
     {
-        public void generateBarrycenter(List<Star> BarrycenterStars)
+
+        public Star? starNodeA {get; private set;}
+        public Star starNodeB {get; private set;}
+        public Barrycenter? barrycenterNode {get; private set;}
+        public Barrycenter(List<Star> barrycenterStars)
         {
             Star newStar = new Star(false, false);
-            List<Star> barrycenterStars = BarrycenterStars;
             if (barrycenterStars.Count == 0)
             {
                 newStar.generateStar();
@@ -38,7 +41,7 @@ namespace BarrycenterGen
             }
             if (barrycenterStars.Count > 2)
             {
-                Star starNodeB = barrycenterStars[0];
+                starNodeB = barrycenterStars[0];
                 Debug.WriteLine(
                     "Basic Type: " + barrycenterStars[0].BasicStarType + "\n" +
                     "Spectral Class: " + barrycenterStars[0].SpectralClass + "\n" +
@@ -49,12 +52,12 @@ namespace BarrycenterGen
                     "=======================\n"
                 );
                 barrycenterStars.RemoveAt(0);
-                Barrycenter barrycenterNode = new Barrycenter();
-                barrycenterNode.generateBarrycenter(barrycenterStars);
+                barrycenterNode = new Barrycenter(barrycenterStars);
+                //barrycenterNode.generateBarrycenter(barrycenterStars);
             }
             else if (barrycenterStars.Count == 2)
             {
-                Star starNodeA = barrycenterStars[0];
+                starNodeB = barrycenterStars[0];
                 Debug.WriteLine(
                     "Basic Type: " + barrycenterStars[0].BasicStarType + "\n" +
                     "Spectral Class: " + barrycenterStars[0].SpectralClass + "\n" +
@@ -65,7 +68,7 @@ namespace BarrycenterGen
                     "=======================\n"
                 );
                 barrycenterStars.RemoveAt(0);
-                Star starNodeB = barrycenterStars[0];
+                starNodeA = barrycenterStars[0];
                 Debug.WriteLine(
                     "Basic Type: " + barrycenterStars[0].BasicStarType + "\n" +
                     "Spectral Class: " + barrycenterStars[0].SpectralClass + "\n" +
@@ -78,6 +81,7 @@ namespace BarrycenterGen
                 barrycenterStars.RemoveAt(0);
             } else
             {
+                starNodeB = barrycenterStars[0];
                 Debug.WriteLine(
                     "Basic Type: " + barrycenterStars[0].BasicStarType + "\n" +
                     "Spectral Class: " + barrycenterStars[0].SpectralClass + "\n" +

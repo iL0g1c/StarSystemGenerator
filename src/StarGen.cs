@@ -22,13 +22,13 @@ namespace StarGen
             BrownDwarf,
             Special
         }
-        public BasicType BasicStarType;
-        public int SizeCode;
-        public int SpectralClass;
-        public float luminosity;
-        public float mass;
-        public float surfaceTemperature;
-        public float radius;
+        public BasicType BasicStarType {get; set;}
+        public int SizeCode {get; set;}
+        public int SpectralClass {get; set;}
+        public float luminosity {get; set;}
+        public float mass {get; set;}
+        public float surfaceTemperature {get; set;}
+        public float radius {get; set;}
         public bool isBinary;
         private bool isSame;
         public bool nextIsBinary;
@@ -307,7 +307,7 @@ namespace StarGen
 
             RandomRoll.GetRandomRoll dice = new RandomRoll.GetRandomRoll();
             Loader starStatModifiers = new Loader();
-            string[,] starStatModifiersData = starStatModifiers.loadStarNumberTypes();
+            string[,] starStatModifiersData = starStatModifiers.loadCsvTable("starStatModifers.csv");
             float[] parsedStarStatData = new float[4];
 
             switch (SizeCode)
@@ -432,7 +432,7 @@ namespace StarGen
                     break;
             }
             Loader starNumberTypes = new Loader();
-            string[,] starNumberTypeData = starNumberTypes.loadStarNumberTypes();
+            string[,] starNumberTypeData = starNumberTypes.loadCsvTable("starNumberType.csv");
             string starDataPoint = starNumberTypeData[row,SpectralClass];
             
             string[] values = starDataPoint.Split("/");
