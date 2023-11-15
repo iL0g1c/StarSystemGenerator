@@ -1,6 +1,9 @@
 ﻿using System.ComponentModel;
 using System.Diagnostics;
+using BarrycenterGen;
 using StarGen;
+using RandomRoll;
+using System.Collections;
 
 namespace Program
 {
@@ -8,19 +11,14 @@ namespace Program
     {
         static void Main(string[] args)
         {
+            RandomRoll.GetRandomRoll dice = new RandomRoll.GetRandomRoll();
             for (int i = 0; i < 50; i++)
             {
-                Star star = new Star(isBinary: false);
-                star.generateStar();
-                Debug.WriteLine(
-                    "Basic Type: " + star.BasicStarType + "\n" +
-                    "Spectral Class: " + star.SpectralClass + "\n" +
-                    "Luminosity: " + star.luminosity + "\n" +
-                    "Mass: " + star.mass + "\n" +
-                    "Surface Temperature: " + star.surfaceTemperature + "\n" +
-                    "Radius: " + star.radius + "\n" +
-                    "=======================\n"
-                );
+            Barrycenter newBarrycenter = new Barrycenter();
+            Debug.WriteLine($"Star System {i+1}\n");
+            newBarrycenter.generateBarrycenter(new List<Star>());
+            //Debug.WriteLine(dice.getRandomRoll(1,10));
+
             }
         }
     }

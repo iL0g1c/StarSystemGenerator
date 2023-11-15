@@ -29,120 +29,236 @@ namespace StarGen
         public float mass;
         public float surfaceTemperature;
         public float radius;
-
-        public Star(bool isBinary, string? rawBasicStarType = null, int? sizeCode = null, int? spectralClass = null)
+        public bool isBinary;
+        private bool isSame;
+        public bool nextIsBinary;
+        public bool nextIsSame;
+        public Star(bool isBinary, bool isSame, BasicType? basicStarType = null, int? sizeCode = null, int? spectralClass = null)
         {
-            if (isBinary)
+            if (isBinary && isSame)
             {
-                if (rawBasicStarType == null || sizeCode == null || spectralClass == null)
-                {
-                    throw new ArgumentException("Star is a binary but some parameters are not provided.");
-                }
-                BasicStarType = (BasicType)Enum.Parse(typeof(BasicType), rawBasicStarType);
+                BasicStarType = basicStarType ?? default(BasicType);
                 SizeCode =  sizeCode ?? default(int);
                 SpectralClass = spectralClass ?? default(int);
+            }
+            else if (isBinary && !isSame)
+            {
+                basicStarType = basicStarType ?? default(BasicType);
             }
         }
 
         public void generateStar()
         {
-            // Get Star type
             RandomRoll.GetRandomRoll dice = new RandomRoll.GetRandomRoll();
-            int starTypeRoll = dice.getRandomRoll(1, 100);
-            int specificationRoll;
-
-            switch (starTypeRoll)
+            // Get Star type
+            if (!isSame)
             {
-                case 1:
-                    specificationRoll = dice.getRandomRoll(1, 10);
-                    BasicStarType = BasicType.A;
-                    if (specificationRoll >= 7)
-                    {
-                        SizeCode = 4;
-                    }
-                    else
-                    {
-                        SizeCode = 5;
-                    }
-                    break;
-                case >= 2 and <= 4:
-                    specificationRoll = dice.getRandomRoll(1, 10);
-                    BasicStarType = BasicType.F;
-                    if (specificationRoll >= 9)
-                    {
-                        SizeCode = 4;
-                    }
-                    else
-                    {
-                        SizeCode = 5;
-                    }
-                    break;
-                case >= 5 and <= 12:
-                    specificationRoll = dice.getRandomRoll(1, 10);
-                    BasicStarType = BasicType.G;
-                    if (specificationRoll == 10)
-                    {
-                        SizeCode = 4;
-                    }
-                    else
-                    {
-                        SizeCode = 5;
-                    }
-                    break;
-                case >= 13 and <= 26:
-                    BasicStarType = BasicType.K;
-                    SizeCode = 5;
-                    break;
-                case >= 27 and <= 36:
-                    BasicStarType = BasicType.WhiteDwarf;
-                    SizeCode = 7;
-                    break;
-                case >= 37 and <= 85:
-                    BasicStarType = BasicType.M;
-                    SizeCode = 5;
-                    break;
-                case >= 86 and <= 98:
-                    BasicStarType = BasicType.BrownDwarf;
-                    SizeCode = 0;
-                    break;
-                case 99:
-                    specificationRoll = dice.getRandomRoll(1, 10);
-                    SizeCode = 3;
-                    switch (specificationRoll)
-                    {
-                        case 1:
-                            BasicStarType = BasicType.F;
-                            break;
+                int starTypeRoll = dice.getRandomRoll(1, 100);
+                int specificationRoll;
 
-                        case 2:
-                            BasicStarType = BasicType.G;
-                            break;
-                        
-                        case >= 3 and <= 7:
-                            BasicStarType = BasicType.K;
-                            break;
-                        
-                        case >= 8:
-                            BasicStarType = BasicType.K;
+                switch (starTypeRoll)
+                {
+                    case 1:
+                        specificationRoll = dice.getRandomRoll(1, 10);
+                        if (specificationRoll >= 7)
+                        {
                             SizeCode = 4;
-                            break;
+                        }
+                        else
+                        {
+                            SizeCode = 5;
+                        }
 
-                    }
-                    break;
-                case 100:
-                    BasicStarType = BasicType.Special;
-                    break;
+                        if (isBinary && !isSame)
+                        {
+                            BasicStarType = BasicType.A;
+                        }
+                        else
+                        {
+                            BasicStarType = BasicType.A;
+                        }
+                        break;
+                    case >= 2 and <= 4:
+                        specificationRoll = dice.getRandomRoll(1, 10);
+    
+                        if (specificationRoll >= 9)
+                        {
+                            SizeCode = 4;
+                        }
+                        else
+                        {
+                            SizeCode = 5;
+                        }
+
+                        if (isBinary && !isSame)
+                        {
+                            if (BasicStarType == BasicType.A)
+                            {
+                                BasicStarType = BasicType.BrownDwarf;
+                                SizeCode = 0;
+                            }
+                            else
+                            {
+                                BasicStarType = BasicType.F;
+                            }
+                        }
+                        else
+                        {
+                            BasicStarType = BasicType.F;
+                        }
+                        break;
+                    case >= 5 and <= 12:
+                        specificationRoll = dice.getRandomRoll(1, 10);
+                        if (specificationRoll == 10)
+                        {
+                            SizeCode = 4;
+                        }
+                        else
+                        {
+                            SizeCode = 5;
+                        }
+
+                        if (isBinary && !isSame)
+                        {
+                            if (new[] {BasicType.A, BasicType.F}.Contains(BasicStarType))
+                            {
+                                BasicStarType = BasicType.BrownDwarf;
+                                SizeCode = 0;
+                            }
+                            else
+                            {
+                                BasicStarType = BasicType.G;
+                            }
+                        }
+                        else
+                        {
+                        BasicStarType = BasicType.G;
+                        }
+                        break;
+                    case >= 13 and <= 26:
+                        if (isBinary && !isSame)
+                        {
+                            if (new[] {BasicType.A, BasicType.F, BasicType.G}.Contains(BasicStarType))
+                            {
+                                BasicStarType = BasicType.BrownDwarf;
+                                SizeCode = 0;
+                            }
+                            else
+                            {
+                                BasicStarType = BasicType.K;
+                            }
+                        }
+                        else
+                        {
+                        BasicStarType = BasicType.K;
+                        }
+                        SizeCode = 5;
+                        break;
+                    case >= 27 and <= 36:
+                        BasicStarType = BasicType.WhiteDwarf;
+                        SizeCode = 7;
+                        break;
+                    case >= 37 and <= 85:
+                        if (isBinary && !isSame)
+                        {
+                            if (new[] {
+                                BasicType.A,
+                                BasicType.F,
+                                BasicType.G,
+                                BasicType.K
+                            }.Contains(BasicStarType))
+                            {
+                                BasicStarType = BasicType.BrownDwarf;
+                                SizeCode = 0;
+                            }
+                            else
+                            {
+                                BasicStarType = BasicType.M;
+                            }
+                        }
+                        else
+                        {
+                            BasicStarType = BasicType.M;
+                        }
+                        SizeCode = 5;
+                        break;
+                    case >= 86 and <= 98:
+                        BasicStarType = BasicType.BrownDwarf;
+                        SizeCode = 0;
+                        break;
+                    case 99:
+                        specificationRoll = dice.getRandomRoll(1, 10);
+                        if (isBinary && !isSame)
+                        {
+                            BasicStarType = BasicType.BrownDwarf;
+                            SizeCode = 0;
+                        }
+                        else
+                        {
+                            SizeCode = 3;
+                            switch (specificationRoll)
+                            {
+                                case 1:
+                                    BasicStarType = BasicType.F;
+                                    break;
+
+                                case 2:
+                                    BasicStarType = BasicType.G;
+                                    break;
+                                
+                                case >= 3 and <= 7:
+                                    BasicStarType = BasicType.K;
+                                    break;
+                                
+                                case >= 8:
+                                    BasicStarType = BasicType.K;
+                                    SizeCode = 4;
+                                    break;
+
+                            }
+                        }
+                        break;
+                    case 100:
+                        BasicStarType = BasicType.Special;
+                        break;
+                }
             }
-
-            // Get Star Spectral Class
-            if (BasicStarType == BasicType.K && SizeCode == 4)
+            if (isBinary && isSame)
             {
-                SpectralClass = 0;
+                int spectralClassResult = dice.getRandomRoll(1,9);
+                if (spectralClassResult < SpectralClass)
+                {
+                    spectralClassResult = SpectralClass;
+                }
             }
             else
             {
-                int spectralClassResult = dice.getRandomRoll(1,9);
-                SpectralClass = spectralClassResult - 1;
+                // Get Star Spectral Class
+                if (BasicStarType == BasicType.K && SizeCode == 4)
+                {
+                    SpectralClass = 0;
+                }
+                else
+                {
+                    int spectralClassResult = dice.getRandomRoll(1,9);
+                    SpectralClass = spectralClassResult - 1;
+                }
+            }
+
+            int binaryCheckRoll = dice.getRandomRoll(1,10);
+            if (binaryCheckRoll >= 7)
+            {
+                int binaryRoll = dice.getRandomRoll(1,10);
+                if (binaryRoll == 1 || binaryRoll == 2)
+                {
+                    nextIsBinary = true;
+                    nextIsSame = true;
+                }
+                else if (binaryRoll >= 3)
+                {
+                    nextIsBinary = true;
+                    nextIsSame = false;
+                }
             }
 
             // Apply Star Stat modifiers
