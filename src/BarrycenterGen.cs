@@ -11,10 +11,9 @@ namespace BarrycenterGen
         public Barrycenter? barrycenterNode {get; private set;}
         public Barrycenter(List<Star> barrycenterStars)
         {
-            Star newStar = new Star(false, false);
+            Star newStar = new Star(false, false);   
             if (barrycenterStars.Count == 0)
             {
-                newStar.generateStar();
                 barrycenterStars.Add(newStar);
             }
             if (barrycenterStars.Last().nextIsBinary)
@@ -34,7 +33,6 @@ namespace BarrycenterGen
                             sizeCode: newStar.SizeCode,
                             spectralClass: newStar.SpectralClass
                         );
-                        newStar.generateStar();
                         barrycenterStars.Add(newStar);
                     }
                 }

@@ -29,12 +29,11 @@ namespace StarGen
         public float mass {get; set;}
         public float surfaceTemperature {get; set;}
         public float radius {get; set;}
-        public bool isBinary;
-        private bool isSame;
         public bool nextIsBinary;
         public bool nextIsSame;
         public Star(bool isBinary, bool isSame, BasicType? basicStarType = null, int? sizeCode = null, int? spectralClass = null)
         {
+            // Selecting creation mode
             if (isBinary && isSame)
             {
                 BasicStarType = basicStarType ?? default(BasicType);
@@ -45,12 +44,9 @@ namespace StarGen
             {
                 basicStarType = basicStarType ?? default(BasicType);
             }
-        }
 
-        public void generateStar()
-        {
             RandomRoll.GetRandomRoll dice = new RandomRoll.GetRandomRoll();
-            // Get Star type
+            // Determining Star type
             if (!isSame)
             {
                 int starTypeRoll = dice.getRandomRoll(1, 100);
@@ -223,6 +219,7 @@ namespace StarGen
                         break;
                 }
             }
+            // Determining spectral class
             if (isBinary && isSame)
             {
                 int spectralClassResult = dice.getRandomRoll(1,9);
@@ -245,6 +242,7 @@ namespace StarGen
                 }
             }
 
+            // Determine if the next star is a binary.
             int binaryCheckRoll = dice.getRandomRoll(1,10);
             if (binaryCheckRoll >= 7)
             {
@@ -285,9 +283,9 @@ namespace StarGen
                 radius = starData[3];
             }
         }
-
         private float calculateDwarfLuminosity()
         {
+            // Calculate the luminosity of a Dwarf Star
             float a = (float)Math.Pow(radius, 2);
             float b = (float)Math.Pow(surfaceTemperature, 4);
             float c = (float)Math.Pow(5800,4);
@@ -296,6 +294,7 @@ namespace StarGen
 
         private float calculateGiantRadius()
         {
+            // Determine the radius of a giant/sub-giant
             float a = 5800 / surfaceTemperature;
             float b = (float)Math.Pow(luminosity, 0.5f);
             return b * (float)Math.Pow(a, 2);
@@ -303,6 +302,7 @@ namespace StarGen
 
         private float[] getStarStatModifierData()
         {
+            // retrieve the star statistical modifiers
             int row = 0;
 
             RandomRoll.GetRandomRoll dice = new RandomRoll.GetRandomRoll();

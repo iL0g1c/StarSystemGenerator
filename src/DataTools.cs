@@ -36,7 +36,7 @@ namespace DataTools
 
                     foreach (var kvp in row)
                     {
-                        data[i, j] = kvp.Value.ToString();
+                        data[i, j] = kvp.Value?.ToString() ?? string.Empty;
                         j++;
                     }
                 }
